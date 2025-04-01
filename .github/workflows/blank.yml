@@ -21,7 +21,7 @@ jobs:
       - name: Extract version bump keyword from PR title
         id: extract_version_bump
         run: |
-          PR_TITLE=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
+          PR_TITLE=$(git log -1 --pretty=%B)
           echo "PR Title: $PR_TITLE"
       
           VERSION_BUMP_TYPE=$(echo "$PR_TITLE" | grep -oE -- "--patch|--minor|--major" | sed 's/^--//g' || echo "none")
