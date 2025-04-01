@@ -1,0 +1,30 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    permissions:
+          id-token: write
+          contents: write
+
+    steps:
+
+      - name: Extract version bump keyword from PR title
+        id: extract_version_bump
+        run: |
+          PR_TITLE=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
+          echo "PR Title: $PR_TITLE"
+      
+          VERSION_BUMP_TYPE=$(echo "$PR_TITLE" | grep -oE -- "--patch|--minor|--major" | sed 's/^--//g' || echo "none")
+          echo "VERSION_BUMP_TYPE=$VERSION_BUMP_TYPE" >> $GITHUB_ENV
+          echo "Detected version bump: $VERSION_BUMP_TYPE"
