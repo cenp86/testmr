@@ -11,7 +11,7 @@ do
 done
 
 # get highest tag number, and add v0.1.0 if doesn't exist
-CURRENT_VERSION=$(git for-each-ref --sort=-committerdate --format '%(refname:strip=2)' refs/tags | head -n 1)
+CURRENT_VERSION=$(git for-each-ref --sort=-committerdate --format '%(refname:strip=2)' refs/tags)
 
 if [[ $CURRENT_VERSION == '' ]]
 then
