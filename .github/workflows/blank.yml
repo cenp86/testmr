@@ -29,7 +29,7 @@ jobs:
         echo "PR Title: $PR_TITLE"
     
         VERSION_BUMP_TYPE=$(echo "$PR_TITLE" | grep -oE -- "--patch|--minor|--major" | sed 's/^--//g' || echo "none")
-        echo "VERSION_BUMP_TYPE=$VERSION_BUMP_TYPE" >> $GITHUB_ENV
+        echo "VERSION_BUMP_TYPE=$(echo "$VERSION_BUMP_TYPE" | tr -d '\n' | xargs)" >> $GITHUB_ENV
         echo "Detected version bump: $VERSION_BUMP_TYPE"
 
 
