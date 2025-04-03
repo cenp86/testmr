@@ -33,7 +33,7 @@ jobs:
         echo "PR Title: $PR_TITLE"
 
         # Extract version bump keyword, or keep default if no match
-        FOUND_VERSION_BUMP=$(echo "$PR_TITLE" | grep -oE -- "--patch|--minor|--major" | sed 's/^--//g')
+        FOUND_VERSION_BUMP=$(echo "$PR_TITLE" | grep -oE -- "--patch|--minor|--major" | sed 's/^--//g' | head -n 1)
         echo "FOUND_VERSION_BUMP: $FOUND_VERSION_BUMP"
 
         # Only update VERSION_BUMP_TYPE if a valid bump type was found
