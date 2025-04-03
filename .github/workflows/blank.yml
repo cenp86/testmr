@@ -25,10 +25,22 @@ jobs:
     - name: Extract version bump keyword from PR title
       id: extract_version_bump
       run: |
-        PR_TITLE=$(git log -1 --pretty=%B)
+        # Default to "patch" first
+        VERSION_BUMP_TYPE="patch"
+
+        # Get PR title
+        PR_TITLE=$(git log -1 --pretty=%B || echo "")
         echo "PR Title: $PR_TITLE"
-    
-        VERSION_BUMP_TYPE=$(echo "$PR_TITLE" | grep -oE -- "--patch|--minor|--major" | sed 's/^--//g' || echo "none")
+
+        # Extract version bump keyword, or keep default if no match
+        FOUND_VERSION_BUMP=$(echo "$PR_TITLE" | grep -oE -- "--patch|--minor|--major" | sed 's/^--//g')
+
+        # Only update VERSION_BUMP_TYPE if a valid bump type was found
+        if [[ -n "$FOUND_VERSION_BUMP" ]]; then
+          VERSION_BUMP_TYPE=$FOUND_VERSION_BUMP
+        fi
+
+        # Store the value safely in GitHub Actions env
         echo "VERSION_BUMP_TYPE=$(echo "$VERSION_BUMP_TYPE" | tr -d '\n' | xargs)" >> $GITHUB_ENV
         echo "Detected version bump: $VERSION_BUMP_TYPE"
 
